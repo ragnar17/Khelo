@@ -10,15 +10,15 @@ logging:
 
 mongoDBConnection:
   credentials:
-    username: "ragnar"
+    username: "admin"
     password: "password"
   seeds:
-    - host: "mongodb"
+    - host: "localhost"
       port: 27017
   database: "donuts"
 
 swagger:
-#  basePath: /Khelo
+  basePath: /Khelo
   resourcePackage: org.example.resources
   scan: true
   info:
