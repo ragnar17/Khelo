@@ -10,12 +10,12 @@ logging:
 
 mongoDBConnection:
   credentials:
-    username: "admin"
+    username: "accountUser"
     password: "password"
   seeds:
     - host: "localhost"
       port: 27017
-  database: "donuts"
+  database: "khelo"
 
 swagger:
   basePath: /Khelo
