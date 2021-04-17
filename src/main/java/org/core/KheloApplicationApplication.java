@@ -17,10 +17,7 @@ import org.core.auth.AuthFilterUtils;
 import org.core.auth.jwt.ExampleUser;
 import org.core.db.MongoDBFactoryConnection;
 import org.core.db.MongoDBManaged;
-import org.core.db.daos.DonutDAO;
-import org.core.db.daos.SellerDAO;
-import org.core.db.daos.StadiumDAO;
-import org.core.db.daos.UserDAO;
+import org.core.db.daos.*;
 import org.core.health.DropwizardMongoDBHealthCheck;
 import org.core.resources.*;
 import org.core.response.ProtectedResourceOne;
@@ -89,12 +86,16 @@ public class KheloApplicationApplication extends Application<KheloApplicationCon
         final StadiumDAO stadiumDAO = new StadiumDAO(mongoDBManagerConn.getClient()
                 .getDatabase(configuration.getMongoDBConnection().getDatabase())
                 .getCollection("stadium"));
+        final CourtDAO courtDAO = new CourtDAO(mongoDBManagerConn.getClient()
+                .getDatabase(configuration.getMongoDBConnection().getDatabase())
+                .getCollection("court"));
 
         environment.lifecycle().manage(mongoDBManaged);
         environment.jersey().register(new DonutResource(donutDAO));
         environment.jersey().register(new UserResource(userDAO));
         environment.jersey().register(new SellerResource(sellerDAO));
         environment.jersey().register(new StadiumResource(stadiumDAO));
+        environment.jersey().register(new CourtResource(courtDAO));
 
         environment.jersey().register(new LoginResource());
         environment.jersey().register(new ProtectedResourceOne());
