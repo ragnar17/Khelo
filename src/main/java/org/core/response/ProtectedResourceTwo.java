@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 
 
 import io.dropwizard.auth.Auth;
-import org.core.auth.jwt.ExampleUser;
+import org.core.auth.jwt.AuthUser;
 import org.core.auth.jwt.UserRoles;
 
 @Path("/protectedResourceTwo")
@@ -18,8 +18,8 @@ import org.core.auth.jwt.UserRoles;
 public class ProtectedResourceTwo {
 
     @GET
-    @RolesAllowed({ UserRoles.ROLE_TWO })
-    public ProtectedResourceResponse getAuthProcessingTime(@Auth ExampleUser user) throws Exception {
+    @RolesAllowed({ UserRoles.ROLE_SELLER })
+    public ProtectedResourceResponse getAuthProcessingTime(@Auth AuthUser user) throws Exception {
 
         return new ProtectedResourceResponse(user.getRoles(), user.getName());
 

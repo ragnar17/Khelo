@@ -2,11 +2,9 @@ package org.core.api;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
-import org.core.util.ObjectIdSerializer;
+import org.core.util.Serializers.ObjectIdSerializer;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Seller {

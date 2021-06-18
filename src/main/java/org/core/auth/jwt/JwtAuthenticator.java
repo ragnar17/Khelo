@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory;
 import io.dropwizard.auth.Authenticator;
 
 
-public class JwtAuthenticator implements Authenticator<JwtContext, ExampleUser> {
+public class JwtAuthenticator implements Authenticator<JwtContext, AuthUser> {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticator.class);
 
     @Override
-    public Optional<ExampleUser> authenticate(JwtContext context) {
+    public Optional<AuthUser> authenticate(JwtContext context) {
         try {
             JwtClaims claims = context.getJwtClaims();
 
@@ -22,7 +22,7 @@ public class JwtAuthenticator implements Authenticator<JwtContext, ExampleUser> 
             String username = (String) claims.getClaimValue("user");
             String roles = (String) claims.getClaimValue("roles");
 
-            return Optional.of(new ExampleUser(id, username, roles));
+            return Optional.of(new AuthUser(id, username, roles));
         } catch (Exception e) {
             LOGGER.warn("msg=Failed to authorise user: {}", e.getMessage(), e);
             return Optional.empty();

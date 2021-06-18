@@ -1,16 +1,23 @@
 package org.core.db.daos;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.core.api.Booking;
 import org.core.api.Court;
 import org.core.api.Court;
+import org.core.util.BookingMapper;
 import org.core.util.CourtMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import static com.mongodb.client.model.Filters.eq;
 
 public class CourtDAO {
     final MongoCollection<Document> courtCollection;
@@ -35,6 +42,17 @@ public class CourtDAO {
     public Court getOne(final ObjectId id) {
         final Optional<Document> courtFind = Optional.ofNullable(courtCollection.find(new Document("_id", id)).first());
         return courtFind.isPresent() ? CourtMapper.map(courtFind.get()) : null;
+    }
+
+    public List<Court> getCourtsByStadiumId(String stadium_id) {
+        List<Court> courts = new ArrayList<>();
+        FindIterable<Document> courtDocuments = courtCollection.find(
+                eq("stadium_id", stadium_id));
+        List<Document> docs = StreamSupport.stream(courtDocuments.spliterator(), false).collect(Collectors.toList());
+        for(Document document : docs) {
+            courts.add(CourtMapper.map(document));
+        }
+        return courts;
     }
 
     public void save(final Court court){

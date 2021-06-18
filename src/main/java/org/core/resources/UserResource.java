@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "user",
@@ -72,8 +73,16 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response save(@ApiParam(value = "User") @NotNull final User user) {
         LOGGER.info("Persist a user in collection with the information: {}", user);
-        userDAO.save(user);
-        return Response.status(Response.Status.CREATED).build();
+        int res = userDAO.save(user);
+        if(res == 1) {
+            return Response.status(Response.Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity("An account already associated with this email.").build();
+        }
+        else if( res == 2){
+            return Response.status(Response.Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity("Username already exists.").build();
+        }
+        else{
+            return Response.status(Response.Status.CREATED).type(MediaType.APPLICATION_JSON).entity("Account Created").build();
+        }
     }
 
     @ApiResponses(value = {

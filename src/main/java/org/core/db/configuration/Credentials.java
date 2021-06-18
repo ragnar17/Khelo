@@ -3,7 +3,7 @@ package org.core.db.configuration;
 import java.util.Arrays;
 import java.util.Objects;
 
-import org.core.util.PasswordSerializer;
+import org.core.util.Serializers.PasswordSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**

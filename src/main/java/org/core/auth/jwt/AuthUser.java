@@ -2,13 +2,13 @@ package org.core.auth.jwt;
 
 import java.security.Principal;
 
-public class ExampleUser implements Principal {
+public class AuthUser implements Principal {
 
     private final long id;
     private final String name;
     private final String roles;
 
-    public ExampleUser(long id, String name, String roles) {
+    public AuthUser(long id, String name, String roles) {
         this.id = id;
         this.name = name;
         this.roles = roles;
@@ -32,19 +32,19 @@ public class ExampleUser implements Principal {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ExampleUser)) {
+        if (!(o instanceof AuthUser)) {
             return false;
         }
 
-        ExampleUser exampleUser = (ExampleUser) o;
+        AuthUser authUser = (AuthUser) o;
 
-        if (id != exampleUser.id) {
+        if (id != authUser.id) {
             return false;
         }
-        if (name != null ? !name.equals(exampleUser.name) : exampleUser.name != null) {
+        if (name != null ? !name.equals(authUser.name) : authUser.name != null) {
             return false;
         }
-        return roles != null ? roles.equals(exampleUser.roles) : exampleUser.roles == null;
+        return roles != null ? roles.equals(authUser.roles) : authUser.roles == null;
     }
 
     @Override

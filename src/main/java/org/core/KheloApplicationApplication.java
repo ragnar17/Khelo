@@ -14,7 +14,7 @@ import io.dropwizard.auth.PrincipalImpl;
 import io.dropwizard.auth.basic.BasicCredentials;
 
 import org.core.auth.AuthFilterUtils;
-import org.core.auth.jwt.ExampleUser;
+import org.core.auth.jwt.AuthUser;
 import org.core.db.MongoDBFactoryConnection;
 import org.core.db.MongoDBManaged;
 import org.core.db.daos.*;
@@ -74,9 +74,7 @@ public class KheloApplicationApplication extends Application<KheloApplicationCon
 
         final MongoDBManaged mongoDBManaged = new MongoDBManaged(mongoDBManagerConn.getClient());
 
-        final DonutDAO donutDAO = new DonutDAO(mongoDBManagerConn.getClient()
-                .getDatabase(configuration.getMongoDBConnection().getDatabase())
-                .getCollection("donuts"));
+
         final UserDAO userDAO = new UserDAO(mongoDBManagerConn.getClient()
                 .getDatabase(configuration.getMongoDBConnection().getDatabase())
                 .getCollection("user"));
@@ -89,31 +87,36 @@ public class KheloApplicationApplication extends Application<KheloApplicationCon
         final CourtDAO courtDAO = new CourtDAO(mongoDBManagerConn.getClient()
                 .getDatabase(configuration.getMongoDBConnection().getDatabase())
                 .getCollection("court"));
+        final BookingDAO bookingDAO = new BookingDAO(mongoDBManagerConn.getClient()
+                .getDatabase(configuration.getMongoDBConnection().getDatabase())
+                .getCollection("booking"));
 
         environment.lifecycle().manage(mongoDBManaged);
-        environment.jersey().register(new DonutResource(donutDAO));
         environment.jersey().register(new UserResource(userDAO));
         environment.jersey().register(new SellerResource(sellerDAO));
         environment.jersey().register(new StadiumResource(stadiumDAO));
         environment.jersey().register(new CourtResource(courtDAO));
+        environment.jersey().register(new BookingResource(bookingDAO));
+        environment.jersey().register(new BookingHandlerResource(bookingDAO,courtDAO,stadiumDAO));
 
-        environment.jersey().register(new LoginResource());
+
+        environment.jersey().register(new LoginResource(userDAO));
         environment.jersey().register(new ProtectedResourceOne());
         environment.jersey().register(new ProtectedResourceTwo());
-        registerAuthFilters(environment);
+        registerAuthFilters(environment,userDAO);
 
         environment.healthChecks().register("DropwizardMongoDBHealthCheck",
                 new DropwizardMongoDBHealthCheck(mongoDBManagerConn.getClient()));
     }
-    private void registerAuthFilters(Environment environment) {
+    private void registerAuthFilters(Environment environment,UserDAO userDAO) {
         AuthFilterUtils authFilterUtils = new AuthFilterUtils();
-        final AuthFilter<BasicCredentials, PrincipalImpl> basicFilter = authFilterUtils.buildBasicAuthFilter();
-        final AuthFilter<JwtContext, ExampleUser> jwtFilter = authFilterUtils.buildJwtAuthFilter();
+        final AuthFilter<BasicCredentials, PrincipalImpl> basicFilter = authFilterUtils.buildBasicAuthFilter(userDAO);
+        final AuthFilter<JwtContext, AuthUser> jwtFilter = authFilterUtils.buildJwtAuthFilter();
 
         final PolymorphicAuthDynamicFeature feature = new PolymorphicAuthDynamicFeature<>(
-                ImmutableMap.of(PrincipalImpl.class, basicFilter, ExampleUser.class, jwtFilter));
+                ImmutableMap.of(PrincipalImpl.class, basicFilter, AuthUser.class, jwtFilter));
         final AbstractBinder binder = new PolymorphicAuthValueFactoryProvider.Binder<>(
-                ImmutableSet.of(PrincipalImpl.class, ExampleUser.class));
+                ImmutableSet.of(PrincipalImpl.class, AuthUser.class));
 
         environment.jersey().register(feature);
         environment.jersey().register(binder);

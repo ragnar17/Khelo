@@ -1,4 +1,4 @@
-package org.core.util;
+package org.core.util.Serializers;
 
 import java.io.IOException;
 

@@ -2,9 +2,10 @@ package org.core.api;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
-import org.core.util.ObjectIdSerializer;
+import org.core.util.Serializers.ObjectIdSerializer;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class Court {
     @JsonSerialize(using = ObjectIdSerializer.class)
@@ -18,6 +19,8 @@ public class Court {
 
     @NotNull
     private String court_number;
+
+    private List<String> active_bookings;
 
     public ObjectId getId() {
         return id;

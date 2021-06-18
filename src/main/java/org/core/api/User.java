@@ -2,7 +2,7 @@ package org.core.api;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
-import org.core.util.ObjectIdSerializer;
+import org.core.util.Serializers.ObjectIdSerializer;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -13,6 +13,11 @@ public class User implements Serializable {
     private ObjectId id;
 
     @NotNull
+    private String firstName;
+
+    private String lastName;
+
+    @NotNull
     private String username;
 
     @NotNull
@@ -21,8 +26,10 @@ public class User implements Serializable {
     @NotNull
     private String email;
 
-    @NotNull
     private String mobile;
+
+    @NotNull
+    private String role;
 
     public User(){
 
@@ -33,12 +40,28 @@ public class User implements Serializable {
         return Objects.hash(id, username);
     }
 
-//    public ObjectId getId() {
-//        return id;
-//    }
+    public ObjectId getId() {
+        return id;
+    }
 
     public void setId(ObjectId id) {
         this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getUsername() {
@@ -73,13 +96,25 @@ public class User implements Serializable {
         this.mobile = mobile;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", mobile='" + mobile + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }
