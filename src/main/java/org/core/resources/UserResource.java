@@ -66,6 +66,17 @@ public class UserResource {
     }
 
 
+    @GET
+    @Path("/username/{username}")
+    public Response getUserDetails(@NotNull @PathParam("username") final String username) {
+        LOGGER.info("Find the User by username : " + username);
+        final List<User> users = userDAO.getUserByUserName(username,0);
+        if (users.size() > 0) {
+            return Response.ok(users.get(0)).build();
+        }
+        return Response.accepted(new org.core.api.Response("User not found.")).build();
+    }
+
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Operation success.")
     })
